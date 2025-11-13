@@ -1,0 +1,10 @@
+/target/
+*.log
+*.tmp
+*.class
+*.DS_Store
+/.idea/
+/.vscode/
+*.iml
+/application.properties
+/application.yml

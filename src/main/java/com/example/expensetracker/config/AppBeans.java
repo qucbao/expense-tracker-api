@@ -3,6 +3,8 @@ package com.example.expensetracker.config;
 import com.example.expensetracker.entity.User;
 import com.example.expensetracker.entity.UserStatus;
 import com.example.expensetracker.repository.UserRepository;
+import com.example.expensetracker.security.CustomUserDetails;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,18 +26,10 @@ public class AppBeans {
     @Bean
     public UserDetailsService userDetailsService() {
         return username -> {
-
             User u = userRepo.findByEmail(username)
                     .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-            boolean locked = UserStatus.LOCKED.equals(u.getStatus());
 
-            // Quy ước: GrantedAuthorities đơn giản (ROLE_USER)
-            return org.springframework.security.core.userdetails.User
-                    .withUsername(u.getEmail())
-                    .password(u.getPasswordHash())
-                    .authorities("ROLE_USER")
-                    .accountLocked(locked)
-                    .build();
+            return CustomUserDetails.fromUser(u);
         };
     }
 
